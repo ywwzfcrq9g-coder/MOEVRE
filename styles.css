@@ -1,0 +1,1337 @@
+﻿/* ============================================================
+   IMPORTERA GOOGLE FONTS
+   Inter från Google Fonts används som typsnitt på hela
+   webbplatsen. Det är optimerat för skärmar och fungerar
+   bra för både rubriker och brödtext.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ============================================================
+   CSS-VARIABLER (Custom Properties)
+   Samlar alla återkommande värden på ett ställe.
+   Principen kallas DRY (Don't Repeat Yourself) — ändrar
+   man --primary här uppdateras färgen överallt automatiskt.
+   ============================================================ */
+:root {
+  --max: 980px;           /* Maxbredd för sidinnehåll */
+  --pad: 24px;            /* Horisontell padding i container */
+  --border: rgba(0,0,0,.12);
+  --muted: rgba(0,0,0,.55);
+  --bg: #E0FBFC;          /* Sidans bakgrundsfärg */
+  --primary: #3D5A80;     /* Primärfärg — mörkblå */
+  --accent: #98C0D9;      /* Accentfärg — ljusblå */
+  --card-bg: #ffffff;
+  --radius: 20px;
+  --header-h: 64px;
+}
+
+/* ============================================================
+   RESET & BOX-SIZING
+   box-sizing: border-box gör att padding räknas IN i
+   elementets bredd, vilket förhindrar oväntade overflow-problem.
+   margin och padding nollställs för konsekvent bas.
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Förhindrar horisontellt layoutskift vid sidnavigering.
+   scrollbar-gutter: stable reserverar alltid plats för
+   scrollbaren oavsett om sidan är tillräckligt lång —
+   detta hindrar innehållet från att hoppa sidled när
+   man navigerar mellan sidor av olika höjd. */
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background: var(--bg);
+  color: #111;
+  line-height: 1.5;
+  overflow-x: clip; /* clip istället för hidden — bryter inte position:sticky */
+  /* Förhindrar att innehållet hamnar under den fixerade headern */
+  padding-top: var(--header-h);
+}
+
+/* Tar bort underline globalt för att matcha designens rena utseende */
+a,
+a:hover,
+a:focus,
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
+   CONTAINER
+   Centrerat innehållsblock med maxbredd och horisontell
+   padding. Återanvänds på alla sidor för konsekvent layout.
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* ============================================================
+   HEADER
+   position: fixed håller headern synlig under scroll.
+   backdrop-filter skapar ett frostat glaseffekt-utseende.
+   ============================================================ */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(224,251,252,.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Header-inner har full bredd med generös sidpadding */
+.header-inner {
+  width: 100%;
+  padding: 0 48px;
+}
+
+/* Flexbox placerar logo och nav horisontellt */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+}
+
+/* Logotypen skalas via height — width: auto behåller proportionerna */
+.logo svg {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+/* ============================================================
+   NAVIGERING
+   <ul>-lista är semantisk standard för menyer — en meny är
+   en lista av alternativ utan inbördes rangordning.
+   list-style: none tar bort punkterna.
+   ============================================================ */
+.navlinks ul {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+
+/* Nav-länkarna rör sig aldrig — transform: none blockerar
+   arv från t.ex. big-card hover-effekter */
+.navlinks a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary);
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+  transition: border-color .15s ease;
+  transform: none !important;
+  display: inline-block;
+}
+
+/* Aktiv sida och hover markeras med en underline.
+   transform: none säkerställer att nav-länkarna aldrig
+   rör sig vid hover, även om andra a-element har transform. */
+.navlinks a:hover,
+.navlinks a.nav-active {
+  border-bottom-color: var(--primary);
+  transform: none;
+}
+
+/* ============================================================
+   HAMBURGER-KNAPP (mobil)
+   Visas bara på skärmar smalare än 640px via media query.
+   Tre <span>-element bildar de tre strecken.
+   ============================================================ */
+.hamburger {
+  display: none; /* Dold på desktop */
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   HERO-SEKTION (startsidan)
+   background-size: cover fyller hela ytan oavsett skärmstorlek.
+   min-height istället för fast höjd — sektionen kan växa.
+   ============================================================ */
+.hero-bg {
+  width: 100%;
+  min-height: 500px;
+  background-image: url("Frame-79.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-center {
+  text-align: center;
+}
+
+/* clamp() ger flytande textstorlek — stor på desktop, lagom på mobil */
+.hero h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.hero p {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ============================================================
+   MAIN
+   Omsluter sidornas primära innehåll.
+   Padding ger luft ovanför och under korten.
+   ============================================================ */
+main {
+  padding: 60px 0 80px;
+}
+
+/* ============================================================
+   PROJEKTKORT (big-card)
+   Flexbox placerar text till vänster och bild till höger.
+   Ingen fast höjd — höjden anpassas automatiskt efter
+   innehållet (krav i uppgiften).
+   ============================================================ */
+.big-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 40px 48px;
+  margin: 40px auto 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,.07);
+  overflow: hidden;
+}
+
+/* Kort som är <a>-element — hover-animation bara här */
+a.big-card {
+  display: flex;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+/* Hover-effekt — bara på projektkorten, inte nav-länkar */
+.big-card:hover,
+a.big-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0,0,0,.10);
+}
+
+/* Textdelen tar den resterande bredden via flex: 1 */
+.card-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.card-subtitle {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-top: 10px;
+}
+
+/* object-fit: cover fyller bildytan utan att förvränga bilden */
+.card-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 14px;
+  flex-shrink: 0; /* Bilden krymper inte vid trånga layouter */
+  display: block;
+}
+
+/* ============================================================
+   SIDRUBRIK (projects-sidan)
+   ============================================================ */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.page-header p {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* ============================================================
+   ABOUT ME — LAYOUT
+   Bild till vänster, all text centrerad bredvid via flexbox.
+   align-items: center centrerar texten vertikalt mot bilden.
+   ============================================================ */
+.about-layout {
+  max-width: 720px;
+}
+
+.about-top-row {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+/* Profilbilden — object-fit: cover fyller ytan utan att förvränga */
+.about-photo {
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 20px;
+  flex-shrink: 0;
+  display: block;
+  background: var(--accent); /* Visas medan bilden laddar */
+}
+
+.about-name-block {
+  min-width: 0;
+  flex: 1;
+}
+
+.about-name {
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.about-role {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+/* line-height: 1.75 ger luftig, lättläst brödtext */
+.about-body {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #333;
+}
+
+/* ============================================================
+   CONTACT — FORMULÄR
+   <form> är semantiskt korrekt element för formulär.
+   Fälten delar samma grundstil för konsekvent utseende.
+   ============================================================ */
+.contact-title {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 40px;
+}
+
+/* Formulärwrapper — full bredd upp till sidans maxbredd */
+.contact-form {
+  display: grid;
+  gap: 14px;
+  max-width: 100%;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  background: #DBF1FF;
+  border: none;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  color: #111;
+  display: block;
+}
+
+.contact-form input {
+  height: 48px;
+  padding: 0 16px;
+}
+
+.contact-form textarea {
+  height: 220px;
+  padding: 14px 16px;
+  resize: vertical; /* Användaren kan göra fältet högre men inte bredare */
+}
+
+/* Tydlig focus-ring förbättrar tillgängligheten */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(61,90,128,.5);
+}
+
+/* Skicka-knappen — full bredd för enhetlighet med fälten */
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  background: var(--accent);
+  color: var(--primary);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  transition: background .15s ease;
+}
+
+.submit-btn:hover {
+  background: #82b3ce;
+}
+
+/* ============================================================
+   PROCESSANALYS — TYPOGRAFI
+   Texten begränsas till 720px för optimal radlängd.
+   Forskning visar att 50–75 tecken per rad ger bäst
+   läsbarhet (Bringhurst, 2004).
+   ============================================================ */
+.process-article {
+  max-width: 720px;
+}
+
+.process-title {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 12px;
+  max-width: 720px;
+  padding-left: 48px;
+}
+
+.process-intro {
+  font-size: 18px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+  max-width: 720px;
+  padding-left: 48px;
+}
+
+.process-article h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+  margin-top: 48px;
+  margin-bottom: 16px;
+}
+
+/* line-height: 1.8 ger god läsbarhet för längre texter */
+.process-article p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #2a2a2a;
+  margin-bottom: 20px;
+}
+
+/* Avdelare mellan sektioner */
+.process-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0;
+}
+
+/* Referenslistan — ordnad lista med indrag */
+.process-article ol {
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-top: 16px;
+}
+
+.process-article ol li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   PROJEKTSIDOR (talk-about-it, gfry, apotek)
+   Layouten delar bild till vänster och info till höger.
+   ============================================================ */
+
+/* Tillbaka-länk */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 48px;
+  opacity: .7;
+  transition: opacity .15s;
+}
+
+.back-link:hover {
+  opacity: 1;
+}
+
+/* Tvåkolumnslayout: bild vänster, info höger */
+.project-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+}
+
+/* Projektbild — bredden är fast, höjden bestäms av bildens
+   naturliga proportioner via height: auto. Inget min-height
+   används eftersom det skapar ett tomt utrymme under bilden
+   när bilden är kortare än det angivna minimivärdet. */
+.project-cover {
+  width: 420px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+}
+
+.project-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Infodelen till höger */
+.project-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.project-category {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+
+.project-title {
+  font-size: clamp(28px, 4vw, 56px);
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -.04em;
+  line-height: 1.05;
+  margin-bottom: 32px;
+}
+
+/* Metadata-grid: 2 kolumner */
+.project-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.meta-item .meta-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.meta-item .meta-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Beskrivningstext */
+.project-desc {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #333;
+  max-width: 480px;
+  margin-bottom: 32px;
+}
+
+/* Pill-brickor — standard vänsterjusterade */
+.project-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+/* Modifier: brickor höger-justerade (Talk About It) */
+.project-stats--right {
+  justify-content: flex-end;
+}
+
+/* Modifier: brickor på en rad, centrerade (Talk About It) */
+.project-stats--nowrap {
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.stat-pill {
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(12px) saturate(1.8);
+  -webkit-backdrop-filter: blur(12px) saturate(1.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.60);
+  box-shadow: 0 2px 12px rgba(61,90,128,.10), inset 0 1px 0 rgba(255,255,255,.75);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+/* Spotify-variant av pill — samma storlek, grön bakgrund */
+.stat-pill--spotify {
+  background: #1DB954;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  transition: background .15s;
+}
+
+.stat-pill--spotify:hover {
+  background: #1aab4d;
+  color: #fff;
+}
+
+.stat-pill--spotify svg {
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* Disclaimer-not (Apotek) */
+.disclaimer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ============================================================
+   TALK ABOUT IT — CSS-grid-layout
+   Desktop: omslagsbild vänster | info höger (rad 1)
+            tom cell vänster   | guldplatta höger (rad 2)
+   Mobil:   bild → guldplatta → text (om-ordnat med grid-areas)
+   ============================================================ */
+.tai-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  grid-template-areas:
+    "cover info"
+    "plaque plaque";
+  column-gap: 40px;
+  row-gap: 40px;
+}
+
+.tai-layout .project-cover  { grid-area: cover; }
+.tai-layout .project-info   { grid-area: info; }
+.tai-layout .project-plaque-wrapper { grid-area: plaque; }
+
+/* Guldplatta-bild (Talk About It) */
+.project-plaque-wrapper img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+}
+
+/* GFRY — all text under galleriet */
+.gfry-desc {
+  margin-top: 48px;
+}
+
+/* Bildgalleri under project-hero (GFRY) — exakt 3 kolumner */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+/* Spotify-knapp — grön med ikon */
+.spotify-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #1DB954;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 100px;
+  transition: background .15s, transform .15s;
+}
+
+.spotify-btn:hover {
+  background: #1aab4d;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.spotify-btn svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   FOOTER
+   CSS Grid med tre kolumner. gap ger luft mellan kolumnerna.
+   ============================================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  margin-top: 40px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 24px;
+  font-size: 14px;
+  color: rgba(0,0,0,.75);
+}
+
+/* Kolumnen med logo och Instagram — flexbox horisontellt */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Footer-logotypen — horisontell textvarianten */
+.footer-logo-small svg {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+.footer-logo-small a {
+  display: block;
+}
+
+/* Etikett ovanför länkarna */
+.footer-grid .label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* ============================================================
+   HOVER PREVIEW CARD (startsidan)
+   Visas när musen förs över ett projektkort.
+   pointer-events: none gör att kortet inte blockerar klick.
+   ============================================================ */
+#card-preview {
+  position: fixed;
+  width: 280px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px) scale(.97);
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 9999;
+}
+
+#card-preview.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#card-preview__img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+#card-preview__body {
+  padding: 14px 16px 16px;
+}
+
+#card-preview__meta {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #3D5A80;
+  margin-bottom: 6px;
+}
+
+#card-preview__title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0d1b2a;
+  margin-bottom: 6px;
+  letter-spacing: -.02em;
+}
+
+#card-preview__desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #555;
+}
+
+#card-preview__arrow {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3D5A80;
+}
+
+/* ============================================================
+   UTSKRIFT — @media print
+   Döljer navigering och stora bilder vid utskrift.
+   Kvar: rubriker, text och kontaktuppgifter.
+   Navigeringen är meningslös på papper och stora bilder
+   är onödiga och dyra att skriva ut.
+   ============================================================ */
+@media print {
+  .header,
+  .hamburger {
+    display: none !important;
+  }
+
+  .hero-bg,
+  .card-image,
+  .project-cover {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    padding-top: 0 !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIV DESIGN — MEDIA QUERIES
+
+   Tre brytpunkter valda efter vanliga enhetsstorlekar:
+   1. max-width: 860px  — tablet / mellanstor skärm
+   2. max-width: 640px  — mobil
+   3. max-width: 400px  — liten mobil
+
+   Att designa för innehållet snarare än specifika enheter
+   ger en mer robust lösning (MDN Web Docs, 2023).
+   ============================================================ */
+
+/* ----- TABLET (max 860px) ----- */
+@media (max-width: 860px) {
+  .header-inner {
+    padding: 0 24px;
+  }
+
+  /* Korten staplas vertikalt, bilden tar full bredd */
+  .big-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 24px;
+  }
+
+  .card-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    max-height: none;
+  }
+
+  /* Footer: två kolumner på tablet */
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+
+  /* About-bild krymper */
+  .about-top-row {
+    gap: 32px;
+  }
+
+  .about-photo {
+    width: 240px;
+    height: 240px;
+  }
+
+  /* Projektsidor: bild ovanför text */
+  .project-hero {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .project-cover {
+    width: 100%;
+  }
+
+  /* Talk About It: en kolumn, omordnat cover → platta → text */
+  .tai-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "cover"
+      "plaque"
+      "info";
+    row-gap: 24px;
+  }
+
+  /* Guldplatta rektangulär på tablet/mobil */
+  .project-plaque-wrapper img {
+    height: 280px;
+  }
+
+  /* Galleri: 2 kolumner på tablet */
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ----- MOBIL (max 640px) ----- */
+@media (max-width: 640px) {
+  /* Hamburger visas, nav-lista döljs och öppnas via JS */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Mobilmeny dold som standard, .open läggs till via JS */
+  .navlinks {
+    display: none;
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: rgba(224,251,252,.97);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px 24px;
+    z-index: 99;
+  }
+
+  .navlinks.open {
+    display: block;
+  }
+
+  /* Menyalternativen staplas vertikalt */
+  .navlinks ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .navlinks a {
+    font-size: 16px;
+  }
+
+  .hero-bg {
+    min-height: 300px;
+  }
+
+  main {
+    padding: 48px 0 60px;
+  }
+
+  /* Footer: en kolumn på mobil */
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-brand {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-image {
+    max-height: none;
+  }
+
+  /* About: bild ovanför text på mobil */
+  .about-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .about-photo {
+    width: 100%;
+    height: 260px;
+  }
+
+  /* Projektsidor */
+  .project-meta {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Galleri: 1 kolumn på mobil */
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Guldplatta ännu mer rektangulär på liten mobil */
+  .project-plaque-wrapper img {
+    height: 220px;
+  }
+}
+
+/* ----- LITEN MOBIL (max 400px) ----- */
+@media (max-width: 400px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .card-title {
+    font-size: 20px;
+  }
+
+  .about-name {
+    font-size: 24px;
+  }
+
+  .about-body {
+    font-size: 15px;
+  }
+
+  .about-photo {
+    height: 200px;
+  }
+}
+
+/* ============================================================
+   LIQUID GLASS
+   Animerade bakgrundsblobs + glasmorfism på kort, header,
+   footer och process-artikel.
+   backdrop-filter skapar frostat glas mot det rörliga bakgrundet.
+   ============================================================ */
+
+/* --- Animerade bakgrundsblobs --- */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  width: 640px; height: 640px;
+  background: radial-gradient(circle, rgba(61,90,128,.32) 0%, transparent 70%);
+  top: -120px; right: -120px;
+  animation: blobA 14s ease-in-out infinite alternate;
+}
+
+body::after {
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(152,192,217,.38) 0%, transparent 70%);
+  bottom: -60px; left: -80px;
+  animation: blobB 18s ease-in-out infinite alternate;
+}
+
+main::before {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(61,90,128,.18) 0%, transparent 70%);
+  top: 45%; left: 35%;
+  animation: blobC 20s ease-in-out infinite alternate;
+}
+
+@keyframes blobA {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(-70px,90px) scale(1.12); }
+}
+
+@keyframes blobB {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(90px,-70px) scale(1.18); }
+}
+
+@keyframes blobC {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(-50px,60px) scale(1.08); }
+}
+
+/* --- Glass cards --- */
+.big-card {
+  background: rgba(255,255,255,.22) !important;
+  backdrop-filter: blur(28px) saturate(1.9) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.9) !important;
+  border: 1px solid rgba(255,255,255,.55) !important;
+  box-shadow:
+    0 8px 32px rgba(61,90,128,.10),
+    inset 0 1.5px 0 rgba(255,255,255,.75),
+    inset 0 -1px 0 rgba(61,90,128,.06) !important;
+}
+
+.big-card:hover {
+  background: rgba(255,255,255,.34) !important;
+  box-shadow:
+    0 22px 64px rgba(61,90,128,.16),
+    inset 0 1.5px 0 rgba(255,255,255,.85),
+    inset 0 -1px 0 rgba(61,90,128,.06) !important;
+}
+
+/* --- Glass header --- */
+.header {
+  background: rgba(224,251,252,.30) !important;
+  backdrop-filter: blur(36px) saturate(2.2) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(2.2) !important;
+  border-bottom: 1px solid rgba(255,255,255,.45) !important;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,.3), 0 2px 24px rgba(61,90,128,.06) !important;
+}
+
+/* --- Glass footer --- */
+.footer {
+  background: rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-top: 1px solid rgba(255,255,255,.4) !important;
+}
+
+/* --- Glass preview popup --- */
+#card-preview {
+  background: rgba(255,255,255,.50) !important;
+  backdrop-filter: blur(32px) saturate(1.8) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(1.8) !important;
+  border: 1px solid rgba(255,255,255,.68) !important;
+  box-shadow:
+    0 24px 64px rgba(61,90,128,.22),
+    inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+
+/* --- Glass process-artikel --- */
+.process-article {
+  background: rgba(255,255,255,.22) !important;
+  backdrop-filter: blur(28px) saturate(1.9) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.9) !important;
+  border: 1px solid rgba(255,255,255,.55) !important;
+  border-radius: 20px !important;
+  padding: 40px 48px !important;
+  box-shadow:
+    0 8px 32px rgba(61,90,128,.10),
+    inset 0 1.5px 0 rgba(255,255,255,.75),
+    inset 0 -1px 0 rgba(61,90,128,.06) !important;
+}
+
+
+/* ============================================================
+   APOTEK CAROUSEL
+   ============================================================ */
+.apotek-carousel {
+  margin-top: 48px;
+}
+.carousel-track {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.carousel-slide { display: none; }
+.carousel-slide.active { display: block; }
+.carousel-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+  cursor: zoom-in;
+}
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+.carousel-btn {
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px) saturate(1.9);
+  -webkit-backdrop-filter: blur(16px) saturate(1.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.60);
+  box-shadow: 0 4px 16px rgba(61,90,128,.12), inset 0 1px 0 rgba(255,255,255,.75);
+  color: var(--primary);
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: 0 6px 22px rgba(61,90,128,.18), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.carousel-dots { display: flex; gap: 8px; align-items: center; }
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.35;
+  cursor: pointer;
+  transition: opacity 0.2s, background 0.2s;
+}
+.dot.active { opacity: 1; background: var(--primary); }
+
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox.open { display: flex; }
+.lightbox-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.lightbox-close:hover { opacity: 1; }
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+/* Carousel mobile */
+@media (max-width: 640px) {
+  .apotek-carousel { margin-top: 32px; }
+  .carousel-btn { width: 36px; height: 36px; font-size: 16px; }
+}
+
+
+/* ============================================================
+   APOTEK LAYOUT - desktop grid: bild+info top, karusell full
+   ============================================================ */
+.apotek-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  grid-template-areas:
+    "cover info"
+    "carousel carousel";
+  column-gap: 80px;
+  row-gap: 48px;
+}
+.apotek-layout .project-cover   { grid-area: cover; }
+.apotek-layout .project-info    { grid-area: info; }
+.apotek-layout .apotek-carousel { grid-area: carousel; margin-top: 0; }
+
+/* Apotek mobil: cover -> karusell -> info */
+@media (max-width: 860px) {
+  .apotek-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "cover"
+      "carousel"
+      "info";
+    row-gap: 24px;
+  }
+}
+
+
+/* project-cover ska inte stretcha till hela gridens höjd */
+.tai-layout .project-cover,
+.apotek-layout .project-cover {
+  align-self: start;
+}
+
+/* Mobil: Spotify-knapp på egen rad under de andra pills */
+@media (max-width: 860px) {
+  .project-stats--nowrap {
+    flex-wrap: wrap;
+  }
+  .project-stats--nowrap .stat-pill--spotify {
+    margin-top: 8px;
+  }
+}
